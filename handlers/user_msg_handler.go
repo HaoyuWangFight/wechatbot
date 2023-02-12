@@ -89,6 +89,7 @@ func (h *UserMessageHandler) ReplyText() error {
 		return err
 	}
 
+	// todo reply要屏蔽错误信息，告知用户请求失败，而不是直接返回open ai给的错误信息
 	// 2.设置上下文，回复用户
 	h.service.SetUserSessionContext(requestText, reply)
 	_, err = h.msg.ReplyText(buildUserReply(reply))

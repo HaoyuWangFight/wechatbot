@@ -34,6 +34,7 @@ type Configuration struct {
 var config *Configuration
 var once sync.Once
 
+// todo 改造成热生效，缓存/或者周期拉或者判断文件信息是否更新
 // LoadConfig 加载配置
 func LoadConfig() *Configuration {
 	once.Do(func() {

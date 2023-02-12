@@ -28,6 +28,7 @@ type GroupMessageHandler struct {
 
 func GroupMessageContextHandler() func(ctx *openwechat.MessageContext) {
 	return func(ctx *openwechat.MessageContext) {
+		// todo 消息需要预处理，去除一些@信息
 		msg := ctx.Message
 		// 获取用户消息处理器
 		handler, err := NewGroupMessageHandler(msg)
@@ -89,6 +90,7 @@ func (g *GroupMessageHandler) ReplyText() error {
 		return nil
 	}
 
+	// todo 做一个过滤 @名字 过滤
 	// 2.获取请求的文本，如果为空字符串不处理
 	requestText := g.getRequestText()
 	if requestText == "" {
@@ -108,6 +110,7 @@ func (g *GroupMessageHandler) ReplyText() error {
 		return err
 	}
 
+	// todo reply要屏蔽错误信息，告知用户请求失败，而不是直接返回open ai给的错误信息
 	// 4.设置上下文，并响应信息给用户
 	g.service.SetUserSessionContext(requestText, reply)
 	_, err = g.msg.ReplyText(g.buildReplyText(reply))
