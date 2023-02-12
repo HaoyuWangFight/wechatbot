@@ -28,7 +28,6 @@ type GroupMessageHandler struct {
 
 func GroupMessageContextHandler() func(ctx *openwechat.MessageContext) {
 	return func(ctx *openwechat.MessageContext) {
-		// todo 消息需要预处理，去除一些@信息
 		msg := ctx.Message
 		// 获取用户消息处理器
 		handler, err := NewGroupMessageHandler(msg)
