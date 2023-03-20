@@ -3,11 +3,12 @@ package handlers
 import (
 	"errors"
 	"fmt"
+	"strings"
+
 	"github.com/eatmoreapple/openwechat"
 	"github.com/qingconglaixueit/wechatbot/gpt"
 	"github.com/qingconglaixueit/wechatbot/pkg/logger"
 	"github.com/qingconglaixueit/wechatbot/service"
-	"strings"
 )
 
 var _ MessageHandlerInterface = (*GroupMessageHandler)(nil)
@@ -170,9 +171,10 @@ func (g *GroupMessageHandler) buildReplyText(reply string) string {
 	}
 
 	// 2.拼接回复,@我的用户，问题，回复
-	replaceText := "@" + g.self.NickName
+	// replaceText := "@" + g.self.NickName
+	replaceText := ""
 	question := strings.TrimSpace(strings.ReplaceAll(g.msg.Content, replaceText, ""))
-	reply = atText + "\n" + question + "\n --------------------------------\n" + reply
+	reply = atText + "\n" + question + "\n --------------------------\n" + reply
 	reply = strings.Trim(reply, "\n")
 
 	// 3.返回回复的内容
