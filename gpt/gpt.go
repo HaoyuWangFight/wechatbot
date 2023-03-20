@@ -44,10 +44,10 @@ type ChatGPTRequestBody struct {
 }
 
 // Completions gtp文本模型回复
-//curl https://api.openai.com/v1/completions
-//-H "Content-Type: application/json"
-//-H "Authorization: Bearer your chatGPT key"
-//-d '{"model": "text-davinci-003", "prompt": "give me good song", "temperature": 0, "max_tokens": 7}'
+// curl https://api.openai.com/v1/completions
+// -H "Content-Type: application/json"
+// -H "Authorization: Bearer your chatGPT key"
+// -d '{"model": "text-davinci-003", "prompt": "give me good song", "temperature": 0, "max_tokens": 7}'
 func Completions(msg string) (string, error) {
 	cfg := config.LoadConfig()
 	requestBody := ChatGPTRequestBody{
@@ -65,7 +65,7 @@ func Completions(msg string) (string, error) {
 		return "", err
 	}
 	logger.Info(fmt.Sprintf("request gpt json string : %v", string(requestData)))
-	req, err := http.NewRequest("POST", BASEURL+"completions", bytes.NewBuffer(requestData))
+	req, err := http.NewRequest("POST", cfg.ChatUrl, bytes.NewBuffer(requestData))
 	if err != nil {
 		return "", err
 	}

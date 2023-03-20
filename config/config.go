@@ -13,6 +13,7 @@ import (
 
 // Configuration 项目配置
 type Configuration struct {
+	ChatUrl string `json:"chat_url"`
 	// gpt apikey
 	ApiKey string `json:"api_key"`
 	// 自动通过好友
@@ -34,7 +35,6 @@ type Configuration struct {
 var config *Configuration
 var once sync.Once
 
-// todo 改造成热生效，缓存/或者周期拉或者判断文件信息是否更新
 // LoadConfig 加载配置
 func LoadConfig() *Configuration {
 	once.Do(func() {
@@ -43,7 +43,7 @@ func LoadConfig() *Configuration {
 			AutoPass:          false,
 			SessionTimeout:    60,
 			MaxTokens:         512,
-			Model:             "text-davinci-003",
+			Model:             "gpt-3.5-turbo",
 			Temperature:       0.9,
 			SessionClearToken: "下一个问题",
 		}
