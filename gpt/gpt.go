@@ -13,8 +13,6 @@ import (
 	"time"
 )
 
-const BASEURL = "https://api.openai.com/v1/"
-
 // ChatGPTResponseBody 请求体
 type ChatGPTResponseBody struct {
 	ID      string                 `json:"id"`
@@ -43,6 +41,48 @@ type ChatGPTRequestBody struct {
 	PresencePenalty  int     `json:"presence_penalty"`
 }
 
+// Chat Completions请求体
+type GPTChatCompletionRequestBody struct {
+	Model            string    `json:"model"`
+	Messages         []Message `json:"messages"`
+	MaxTokens        uint      `json:"max_tokens"`
+	Temperature      float64   `json:"temperature"`
+	TopP             int       `json:"top_p"`
+	FrequencyPenalty int       `json:"frequency_penalty"`
+	PresencePenalty  int       `json:"presence_penalty"`
+}
+
+type Message struct {
+	Role    string `json:"role"`
+	Content string `json:"content"`
+}
+
+func ChatCompletions(msg string) (string, error) {
+	cfg := config.LoadConfig()
+	messages := make([]Message, 1)
+	message := Message{
+		Role:    "user",
+		Content: msg,
+	}
+	messages[0] = message
+	requestBody := GPTChatCompletionRequestBody{
+		Model:            cfg.Model,
+		Messages:         messages,
+		MaxTokens:        cfg.MaxTokens,
+		Temperature:      cfg.Temperature,
+		TopP:             1,
+		FrequencyPenalty: 0,
+		PresencePenalty:  0,
+	}
+	requestData, err := json.Marshal(requestBody)
+
+	if err != nil {
+		return "", err
+	}
+	logger.Info(fmt.Sprintf("request gpt json string : %v", string(requestData)))
+	return RequestOpenai(requestData, cfg.ChatUrl, cfg.ApiKey)
+}
+
 // Completions gtp文本模型回复
 // curl https://api.openai.com/v1/completions
 // -H "Content-Type: application/json"
@@ -65,12 +105,15 @@ func Completions(msg string) (string, error) {
 		return "", err
 	}
 	logger.Info(fmt.Sprintf("request gpt json string : %v", string(requestData)))
-	req, err := http.NewRequest("POST", cfg.ChatUrl, bytes.NewBuffer(requestData))
+	return RequestOpenai(requestData, cfg.ChatUrl, cfg.ApiKey)
+}
+
+func RequestOpenai(requestData []byte, url string, apiKey string) (string, error) {
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(requestData))
 	if err != nil {
 		return "", err
 	}
 
-	apiKey := config.LoadConfig().ApiKey
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "Bearer "+apiKey)
 	client := &http.Client{Timeout: 30 * time.Second}
