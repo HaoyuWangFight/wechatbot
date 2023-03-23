@@ -33,14 +33,14 @@ type ChatGPTResponseBody struct {
 	Usage   map[string]interface{} `json:"usage"`
 }
 
-type GPTChatCompletionChoiceItem struct {
+type ChoiceItem struct {
 	Text         string `json:"text"`
 	Index        int    `json:"index"`
 	Logprobs     int    `json:"logprobs"`
 	FinishReason string `json:"finish_reason"`
 }
 
-type ChoiceItem struct {
+type GPTChatCompletionChoiceItem struct {
 	Index        int     `json:"index"`
 	Mesg         Message `json:"message"`
 	FinishReason string  `json:"finish_reason"`
@@ -157,7 +157,7 @@ func RequestOpenai(requestData []byte, url string, apiKey string) (string, error
 
 	var reply string
 	if len(gptResponseBody.Choices) > 0 {
-		reply = gptResponseBody.Choices[0].Text
+		reply = gptResponseBody.Choices[0].Mesg.Content
 	}
 	logger.Info(fmt.Sprintf("gpt response text: %s ", reply))
 	return reply, nil
