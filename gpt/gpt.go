@@ -13,6 +13,16 @@ import (
 	"time"
 )
 
+// Chat Completions 响应体
+type GPTChatCompletionResponseBody struct {
+	ID      string                        `json:"id"`
+	Object  string                        `json:"object"`
+	Created int                           `json:"created"`
+	Model   string                        `json:"model"`
+	Choices []GPTChatCompletionChoiceItem `json:"choices"`
+	Usage   map[string]interface{}        `json:"usage"`
+}
+
 // ChatGPTResponseBody 请求体
 type ChatGPTResponseBody struct {
 	ID      string                 `json:"id"`
@@ -23,11 +33,17 @@ type ChatGPTResponseBody struct {
 	Usage   map[string]interface{} `json:"usage"`
 }
 
-type ChoiceItem struct {
+type GPTChatCompletionChoiceItem struct {
 	Text         string `json:"text"`
 	Index        int    `json:"index"`
 	Logprobs     int    `json:"logprobs"`
 	FinishReason string `json:"finish_reason"`
+}
+
+type ChoiceItem struct {
+	Index        int     `json:"index"`
+	Mesg         Message `json:"message"`
+	FinishReason string  `json:"finish_reason"`
 }
 
 // ChatGPTRequestBody 响应体
@@ -132,7 +148,7 @@ func RequestOpenai(requestData []byte, url string, apiKey string) (string, error
 	}
 	logger.Info(fmt.Sprintf("response gpt json string : %v", string(body)))
 
-	gptResponseBody := &ChatGPTResponseBody{}
+	gptResponseBody := &GPTChatCompletionResponseBody{}
 	log.Println(string(body))
 	err = json.Unmarshal(body, gptResponseBody)
 	if err != nil {
