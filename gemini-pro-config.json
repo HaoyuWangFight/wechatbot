@@ -1,0 +1,9 @@
+{
+  "chat_url": " https://gemini.relationshit.win/v1beta/models/gemini-pro:generateContent",
+  "api_key": "AIzaSyCeZniX2CJHBJwdp4zH_ltouk2uJpF8gDE",
+  "auto_pass": false,
+  "session_timeout": 60,
+  "session_clear_token": "清空会话",
+  "max_content_num": 10,
+  "max_wait_time": 120
+}
