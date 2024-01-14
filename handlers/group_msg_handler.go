@@ -3,10 +3,10 @@ package handlers
 import (
 	"errors"
 	"fmt"
+	"github.com/qingconglaixueit/wechatbot/gemini"
 	"strings"
 
 	"github.com/eatmoreapple/openwechat"
-	"github.com/qingconglaixueit/wechatbot/gpt"
 	"github.com/qingconglaixueit/wechatbot/pkg/logger"
 	"github.com/qingconglaixueit/wechatbot/service"
 )
@@ -99,10 +99,12 @@ func (g *GroupMessageHandler) ReplyText() error {
 	}
 
 	// 3.请求GPT获取回复
-	reply, err = gpt.ChatCompletions(requestText)
+	//reply, err = gpt.ChatCompletions(requestText)
+	reply, err = gemini.ChatCompletions(requestText, g.msg.FromUserName)
 	if err != nil {
 		// 2.1 将GPT请求失败信息输出给用户，省得整天来问又不知道日志在哪里。
-		errMsg := fmt.Sprintf("gpt request error: %v", err)
+		//errMsg := fmt.Sprintf("gpt request error: %v", err)
+		errMsg := fmt.Sprintf("gemini pro request error: %v", err)
 		_, err = g.msg.ReplyText(errMsg)
 		if err != nil {
 			return errors.New(fmt.Sprintf("response group error: %v ", err))
