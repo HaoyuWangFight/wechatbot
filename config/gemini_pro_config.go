@@ -1,3 +1,6 @@
+//go:build gemini
+// +build gemini
+
 package config
 
 import (
@@ -5,6 +8,7 @@ import (
 	"github.com/qingconglaixueit/wechatbot/pkg/logger"
 	"log"
 	"os"
+	"sync"
 	"time"
 )
 
@@ -25,11 +29,12 @@ type GeminiProConfiguration struct {
 	MaxWaitTime int64 `json:"max_wait_time"`
 }
 
-var conf *GeminiProConfiguration
+var config *GeminiProConfiguration
+var once sync.Once
 
-func LoadGeminiProConfiguration() *GeminiProConfiguration {
+func LoadConfig() *GeminiProConfiguration {
 	once.Do(func() {
-		conf = &GeminiProConfiguration{
+		config = &GeminiProConfiguration{
 			ChatUrl:           " https://gemini.relationshit.win/v1beta/models/gemini-pro:generateContent",
 			ApiKey:            "",
 			AutoPass:          false,
@@ -49,7 +54,7 @@ func LoadGeminiProConfiguration() *GeminiProConfiguration {
 			}
 			defer f.Close()
 			encoder := json.NewDecoder(f)
-			err = encoder.Decode(conf)
+			err = encoder.Decode(config)
 			if err != nil {
 				log.Fatalf("decode gemini-pro-config err: %v", err)
 				return
@@ -57,9 +62,9 @@ func LoadGeminiProConfiguration() *GeminiProConfiguration {
 		}
 	})
 
-	if conf.ApiKey == "" {
+	if config.ApiKey == "" {
 		logger.Danger("gemini-pro-config err: api key required")
 	}
 
-	return conf
+	return config
 }

@@ -56,7 +56,7 @@ type Chatter struct {
 var Chatters map[string]*Chatter
 
 func ChatCompletions(msg, user string) (string, error) {
-	cfg := config.LoadGeminiProConfiguration()
+	cfg := config.LoadConfig()
 
 	if _, ok := Chatters[user]; !ok {
 		Chatters[user] = &Chatter{HistoryContents: make([]Content, 0)}
@@ -84,7 +84,7 @@ func ChatCompletions(msg, user string) (string, error) {
 }
 
 func RequestGeminiPro(requestData []byte, user string) (string, error) {
-	cfg := config.LoadGeminiProConfiguration()
+	cfg := config.LoadConfig()
 
 	queryParams := url.Values{}
 	queryParams.Set("key", cfg.ApiKey)

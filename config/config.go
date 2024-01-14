@@ -1,3 +1,6 @@
+//go:build gpt
+// +build gpt
+
 package config
 
 import (
